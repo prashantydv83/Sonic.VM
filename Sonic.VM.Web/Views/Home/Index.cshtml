@@ -1,0 +1,24 @@
+﻿@using Sonic.VM.Web.Models;
+@model IEnumerable<Product>
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Products</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <ul>
+            @foreach (Product p in @Model)
+            {
+                <li>
+                    @Html.DisplayFor(model => p.ProdName)
+                </li>
+            }
+        </ul>
+    </div>
+  
+</div>
