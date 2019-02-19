@@ -11,6 +11,7 @@ namespace Sonic.VM.Repository.Data
     public class PaymtDtlDataRepository : IPaymtDetailRepository
     {
         List<PaymentDetail> paymentDetails = new List<PaymentDetail>();
+        
         List<PaymentType> paymentTypes = new List<PaymentType> {
             new PaymentType{ PaymtId = 1, PaymtType= "Cash" },
             new PaymentType{ PaymtId = 2, PaymtType= "Card" }
