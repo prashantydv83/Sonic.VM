@@ -26,7 +26,8 @@ namespace Sonic.VM.Web.Controllers
         {
             var currentstock = _productService.GetProducts();
             var paymenttypes = _paymentDetailService.GetPaymentTypes();
-
+            var orders = _orderService.GetOrders();
+            
             List<TotalSales> totalSales = new List<TotalSales>();
             TotalSales sale = new TotalSales();
             foreach (var p in paymenttypes)
@@ -34,7 +35,7 @@ namespace Sonic.VM.Web.Controllers
                 sale = new TotalSales() { PaymentDesc = p.PaymtType, TotalAmount = _paymentDetailService.GetSalesByType(p.PaymtId) };
                 totalSales.Add(sale);
             }
-            
+            ViewData["canssold"] = orders;
             ViewData["currentstock"] = currentstock;
             ViewData["totalsales"] = totalSales;
             return View();
@@ -65,7 +66,8 @@ namespace Sonic.VM.Web.Controllers
             }
 
             var newStock = _productService.GetProducts();
-
+            var orders = _orderService.GetOrders();
+            ViewData["canssold"] = orders;
             ViewData["currentstock"] = newStock;
             ViewData["totalsales"] = totalSales;
            

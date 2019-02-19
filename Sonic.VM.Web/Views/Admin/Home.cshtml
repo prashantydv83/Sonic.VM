@@ -4,6 +4,7 @@
     ViewBag.Title = "Admin Home Page";
     List<Product> products = ViewData["currentstock"] as List<Product>;
     List<TotalSales> totalSales = ViewData["totalsales"] as List<TotalSales>;
+    List<Order> canssold = ViewData["canssold"] as List<Order>;
 }
 <div class="jumbotron">
     <h1>@ViewBag.Title</h1>
@@ -18,19 +19,20 @@
         <ul>
             @foreach (Product p in products)
             {
-                <li>
-                    @p.ProdName, Qty  @p.ProdQty
-                </li>
+            <li>
+                @p.ProdName, Qty  @p.ProdQty
+            </li>
             }
         </ul>
     </div>
     <div class="col-md-4">
         <ul>
+            <li>Total Cans Sold : @canssold.Count</li>
             @foreach (TotalSales t in totalSales)
             {
-                <li>
-                    Total  @t.PaymentDesc Sales : @t.TotalAmount
-                </li>
+            <li>
+                Total  @t.PaymentDesc Sales : @t.TotalAmount
+            </li>
             }
         </ul>
     </div>

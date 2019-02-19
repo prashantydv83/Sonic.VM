@@ -5,6 +5,7 @@
     ViewBag.Title = "Restock successfull";
     List<Product> products = ViewData["currentstock"] as List<Product>;
     List<TotalSales> totalSales = ViewData["totalsales"] as List<TotalSales>;
+    List<Order> canssold = ViewData["canssold"] as List<Order>;
 }
 
 <div class="jumbotron">
@@ -42,6 +43,7 @@
     </div>
     <div class="col-md-4">
         <ul>
+            <li>Total Cans Sold : @canssold.Count</li>
             @foreach (TotalSales t in totalSales)
             {
                 <li>
