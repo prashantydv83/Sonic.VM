@@ -1,0 +1,40 @@
+﻿
+@using Sonic.VM.Web.Models;
+
+@{
+    ViewBag.Title = "Home Page";
+    List<Product> products = ViewData["currentstock"] as List<Product>;
+    List<TotalSales> totalSales = ViewData["totalsales"] as List<TotalSales>;
+}
+
+
+<div class="row">
+    Your Payment details have been cleared.
+    Your Stock has been updated. 
+    <div class="col-md-4">
+        <ul>
+            @foreach (Product p in products)
+            {
+                <li>
+                    Product :  @p.ProdName Updated Stock : @p.ProdQty
+                </li>
+            }
+        </ul>
+    </div>
+
+    <div class="col-md-4">
+        <ul>
+            @foreach (TotalSales t in totalSales)
+            {
+                <li>
+                    Payment Type :  @t.PaymentDesc Total Sales : @t.TotalAmount
+                </li>
+            }
+        </ul>
+    </div>
+    <div>
+        @Html.ActionLink("Restock Machine", "Restock")
+
+    </div>
+
+</div>

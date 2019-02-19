@@ -20,7 +20,7 @@ namespace Sonic.VM.Repository.Data
             new Product{ ProdId = 7, ProdName= "Mixed", ProdPrice= 2.5,ProdQty = 5 },
             new Product{ ProdId = 8, ProdName= "Strawberry", ProdPrice= 2.5 ,ProdQty = 5},
             new Product{ ProdId = 9, ProdName= "Banana", ProdPrice= 2.5 ,ProdQty = 5},
-            new Product{ ProdId = 10, ProdName= "Apple", ProdPrice= 2.5,ProdQty = 5 }
+            new Product{ ProdId = 10, ProdName= "Apple", ProdPrice= 2.5,ProdQty = 0 }
         };
 
         public bool AddNewProductStock(List<Product> newstockproducts)

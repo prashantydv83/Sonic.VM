@@ -1,0 +1,25 @@
+﻿@using Sonic.VM.Web.Models;
+@model IEnumerable<PaymentType>
+
+@{
+    ViewBag.Title = "Order";
+    Product product= Session["SelectedProduct"] as Product;
+}
+<h2>@ViewBag.Title.</h2>
+<h3>@ViewBag.Message</h3>
+
+
+<div class="row">
+    <div class="col-md-4">
+        <ul>
+           
+                @foreach (PaymentType p in @Model)
+                {
+                    <li>
+                        @Html.ActionLink(p.PaymtType, "PlaceOrder", new Order { OrdrId = -1, PaymtDtlId = p.PaymtId, ProdId = product.ProdId, Qty = 1, Amnt = product.ProdPrice })
+                    </li>
+                }
+        </ul>
+    </div>
+
+</div>
