@@ -14,12 +14,16 @@ namespace Sonic.VM.Service
 {
     public class OrderService : IOrderService
     {
-        private readonly IOrderRepository orderRepository;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IProductService _productService;
+        private readonly IPaymentDetailService _paymentDetailService;
         private readonly ILogger _logger = Logger.MyLogger;
 
-        public OrderService()
+        public OrderService(IProductService productService, IPaymentDetailService paymentDetailService)
         {
-            orderRepository = new OrderDataRepository();
+            _orderRepository = new OrderDataRepository();
+            _productService = productService;
+            _paymentDetailService = paymentDetailService;
         }
 
         public List<Order> GetOrders()
@@ -28,7 +32,7 @@ namespace Sonic.VM.Service
 
             try
             {
-                return orderRepository.GetOrders();
+                return _orderRepository.GetOrders();
             }
             catch (Exception ex)
             {
@@ -45,16 +49,25 @@ namespace Sonic.VM.Service
             try
             {
                 //Validate Order Qty
-
-                //Create Order
-
-                //AcceptPayment
-                PaymentDetail paymentDetail = new PaymentDetail();
-                new PaymentDetailService().AddPayment(paymentDetail);
-
-                //Reduce Stock of the Product
-                return orderRepository.PlaceOrder(order);                
-
+                if (_productService.IsProductInStock(order.ProdId))
+                {  
+                    //AcceptPayment
+                    PaymentDetail paymentDetail = new PaymentDetail {
+                        PaymtDtlId = order.OrdrId,
+                        PaymtID = order.PaymtDtlId,
+                        Amnt = order.Amnt,
+                        PaymtCardNo = "XXXX"
+                    };
+                    _paymentDetailService.AddPayment(paymentDetail);
+                    
+                    if (_orderRepository.PlaceOrder(order))
+                    {
+                        //Reduce Stock of the Product
+                        return _productService.UpdateProductStock(order.ProdId);
+                    }
+                }
+              
+                return false;
             }
             catch (Exception ex)
             {
@@ -70,7 +83,7 @@ namespace Sonic.VM.Service
 
             try
             {
-                orderRepository.ResetOrders();
+                _orderRepository.ResetOrders();
             }
             catch (Exception ex)
             {

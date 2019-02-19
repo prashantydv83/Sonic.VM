@@ -61,7 +61,7 @@ namespace Sonic.VM.Service
             }
         }
 
-        public bool UpdateProductStock(Product product)
+        public bool UpdateProductStock(int productId)
         {
             _logger.LogInfoMessage("{0}()", MethodBase.GetCurrentMethod().Name);
 
@@ -69,7 +69,7 @@ namespace Sonic.VM.Service
             try
             {
                 products = productRepository.GetProducts();
-                var prd = products.First(i => i.ProdId == product.ProdId);
+                var prd = products.First(i => i.ProdId == productId);
                 prd.ProdQty = prd.ProdQty - 1;
                 return productRepository.UpdateProductStock(prd);
             }
@@ -85,17 +85,8 @@ namespace Sonic.VM.Service
         {
             _logger.LogInfoMessage("{0}()", MethodBase.GetCurrentMethod().Name);
 
-            var products = new List<Product>();
             try
             {
-                products = productRepository.GetProducts();
-                for (int i = 0; i < newstockproducts.Count; i++)
-                {
-                    foreach (var z in products.FindAll(x => x.ProdId == newstockproducts[i].ProdId))
-                    {
-                        z.ProdQty = z.ProdQty + Convert.ToInt32(newstockproducts[i].ProdQty);
-                    }
-                }
                 return productRepository.AddNewProductStock(newstockproducts);
             }
             catch (Exception ex)

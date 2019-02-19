@@ -25,13 +25,14 @@ namespace Sonic.VM.Repository.Data
 
         public bool AddNewProductStock(List<Product> newstockproducts)
         {
-            for (int i = 0; i < newstockproducts.Count; i++)
-            {
-                foreach (var z in products.FindAll(x => x.ProdId == newstockproducts[i].ProdId))
+            newstockproducts.ForEach(
+                item =>
                 {
-                    z.ProdQty = Convert.ToInt32(newstockproducts[i].ProdQty);
+                    var product = products.FirstOrDefault(x => x.ProdId == item.ProdId);
+                    product.ProdQty += item.ProdQty;
                 }
-            }
+                );
+
             return true;
         }
 

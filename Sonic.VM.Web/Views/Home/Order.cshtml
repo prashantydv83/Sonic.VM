@@ -1,25 +1,28 @@
-﻿@using Sonic.VM.Web.Models;
+﻿@using Sonic.VM.Entities;
 @model IEnumerable<PaymentType>
-
 @{
-    ViewBag.Title = "Order";
-    Product product= Session["SelectedProduct"] as Product;
+    ViewBag.Title = "Make Payment";
+    Product product = ViewData["SelectedProduct"] as Product;
 }
-<h2>@ViewBag.Title.</h2>
+<div class="jumbotron">
+    <h1>@ViewBag.Title</h1>
+</div>
 <h3>@ViewBag.Message</h3>
 
-
 <div class="row">
-    <div class="col-md-4">
-        <ul>
-           
+    <div class="col-md-12" >
+        @if (Model != null)
+        {
+            <div class="btn-group" role="group" aria-label="...">
                 @foreach (PaymentType p in @Model)
                 {
-                    <li>
-                        @Html.ActionLink(p.PaymtType, "PlaceOrder", new Order { OrdrId = -1, PaymtDtlId = p.PaymtId, ProdId = product.ProdId, Qty = 1, Amnt = product.ProdPrice })
-                    </li>
+                    @Html.ActionLink(p.PaymtType, "PlaceOrder", new { id = p.PaymtId, prodId = product.ProdId }, new { @class = "btn btn-default active" })
                 }
-        </ul>
+            </div>
+        }
+        else
+        {
+            @ViewBag.InvalidProductMessage
+        }
     </div>
-
 </div>

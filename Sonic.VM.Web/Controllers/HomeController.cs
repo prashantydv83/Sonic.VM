@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Sonic.VM.Contracts;
+using Sonic.VM.Entities;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Sonic.VM.Contracts;
 
 namespace Sonic.VM.Web.Controllers
 {
@@ -16,73 +15,68 @@ namespace Sonic.VM.Web.Controllers
         public HomeController(IProductService productService, IPaymentDetailService paymentDetailService, IOrderService orderService)
         {
             _productService = productService;
-            _paymentDetailService= paymentDetailService;
+            _paymentDetailService = paymentDetailService;
             _orderService = orderService;
         }
 
         public ActionResult Index()
         {
-            Session["SelectedProduct"] = null;
-            var obj = _productService.GetProducts();
+            ViewData["SelectedProduct"] = null;
+            var productList = _productService.GetProducts();
 
-            var query = (from product in obj
-                         select new Models.Product
-                         {
-                             ProdId = product.ProdId,
-                             ProdName = product.ProdName,
-                             ProdPrice = product.ProdPrice,
-                             ProdQty = product.ProdQty                             
-                         }).Distinct().ToList<Models.Product>();
+            var products = productList;
 
-            IEnumerable<Models.Product> prod = query;
-            return View(prod);
+            return View(products);
         }
 
-        public ActionResult Order(int ProdId)
+        public ActionResult Order(int prodId)
         {
             var products = _productService.GetProducts();
-            var query = (from product in products
-                         where product.ProdId == ProdId
-                         select new Models.Product
-                         {
-                             ProdId = product.ProdId,
-                             ProdName = product.ProdName,
-                             ProdPrice = product.ProdPrice,
-                             ProdQty = product.ProdQty
-                         }).Distinct();
-            Session["SelectedProduct"] = query.First();
-       
-            var obj = _productService.IsProductInStock(ProdId);
+            var product = products.FirstOrDefault(x => x.ProdId == prodId);
+            IList<PaymentType> paymentTypes=null;
 
-            if (obj)
+            if (product != null)
             {
-                ViewBag.Message = "";
-                var payment = _paymentDetailService.GetPaymentTypes();
-                var paymentstype = (from pymt in payment
-                             select new Models.PaymentType
-                             {
-                                 PaymtId = pymt.PaymtId,
-                                 PaymtType = pymt.PaymtType
-                             }).Distinct().ToList<Models.PaymentType>();
-                IEnumerable<Models.PaymentType> prod = paymentstype;
-                return View(prod);
+                if (product.ProdQty < 1)
+                {
+                    ViewBag.Message = "The selected item is out of stock. Please try again and select some other item.";
+                    return View();
+                }
+                ViewData["SelectedProduct"] = product;
+                paymentTypes = _paymentDetailService.GetPaymentTypes();
             }
             else
             {
-                ViewBag.Message = "No Stock Available. Please try some other product.";
+                ViewBag.InvalidProductMessage = "Invalid Product";
             }
-           
-             return View();
+
+            return View(paymentTypes);
         }
 
-        public ActionResult PlaceOrder(Models.Order order)
+        public ActionResult PlaceOrder(int id,int prodId)
         {
-            Entities.Order ordr = new Entities.Order { OrdrId = -1, PaymtDtlId = order.PaymtDtlId, ProdId = order.ProdId, Amnt = order.Amnt, Qty = order.Qty };
-            if (_orderService.PlaceOrder(ordr))
+            var products = _productService.GetProducts();
+            var product = products.FirstOrDefault(x => x.ProdId == prodId);
+
+            if (product != null)
             {
-                ViewBag.Message = "Your payment has been accepted. Kindly collect your order. Thankyou!";
+                
+
+                Order ordr = new Order { OrdrId = 10, PaymtDtlId = id, ProdId = product.ProdId, Amnt = product.ProdPrice, Qty = 1 };
+                if (_orderService.PlaceOrder(ordr))
+                {
+                    ViewBag.Message = "Your payment has been accepted. Kindly collect your order. Thankyou!";
+                }
+                else
+                {
+                    ViewBag.Message = "There was a problem with your order. Please try again.";
+                }
             }
-            
+            else
+            {
+                ViewBag.Message = "There was a problem with your order. Please try again.";
+            }
+
             return View();
         }
     }

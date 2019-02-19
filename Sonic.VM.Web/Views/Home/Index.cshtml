@@ -1,4 +1,4 @@
-﻿@using Sonic.VM.Web.Models;
+﻿@using Sonic.VM.Entities
 @model IEnumerable<Product>
 
 @{
@@ -11,11 +11,11 @@
 
 <div class="row">
     <div class="col-md-4">
-        <ul>
+        <ul class="form-inline">
             @foreach (Product p in @Model)
             {
             <li>
-                @Html.ActionLink(p.ProdName, "Order",new { ProdId = p.ProdId}) 
+                @Html.ActionLink(p.ProdName + "  $ " + p.ProdPrice, "Order",new { prodId = p.ProdId})
             </li>
             }
         </ul>

@@ -25,9 +25,9 @@ namespace Sonic.VM.Contracts
         /// <summary>
         /// Update stock by reducing one qty of selected product
         /// </summary>
-        /// <param name="prodId">prodId</param>
+        /// <param name="productId">productId</param>
         /// <returns>whether selected product stock is updated or not</returns>
-        bool UpdateProductStock(Product product);
+        bool UpdateProductStock(int productId);
 
         /// <summary>
         /// Add new stock.
