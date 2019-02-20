@@ -1,7 +1,8 @@
 using System;
 using Sonic.VM.Contracts;
 using Sonic.VM.Service;
-
+using Sonic.VM.Repository.Data;
+using Sonic.VM.Repository.Interface;
 using Unity;
 
 namespace Sonic.VM.Web
@@ -43,13 +44,21 @@ namespace Sonic.VM.Web
             // container.LoadConfiguration();
 
             // TODO: Register your type's mappings here.
-            container.RegisterSingleton<IOrderService, OrderService>();
+
+            container.RegisterSingleton<IProductRepository, ProductDataRepository>();
+
+            container.RegisterSingleton<IPaymtDetailRepository, PaymtDtlDataRepository>();
+
+            container.RegisterSingleton<IOrderRepository, OrderDataRepository>();
 
             container.RegisterSingleton<IProductService, ProductService>();
 
             container.RegisterSingleton<IPaymentDetailService, PaymentDetailService>();
 
-            
+            container.RegisterSingleton<IOrderService, OrderService>();
+
+           
+
         }
     }
 }

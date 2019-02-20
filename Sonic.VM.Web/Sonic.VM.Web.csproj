@@ -212,6 +212,14 @@
       <Project>{f9578cd3-c262-4429-978f-eee16aaeb545}</Project>
       <Name>Sonic.VM.Entities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Sonic.VM.Repository.Data\Sonic.VM.Repository.Data.csproj">
+      <Project>{2c30437e-bfcb-4093-9442-4033244a42e4}</Project>
+      <Name>Sonic.VM.Repository.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sonic.VM.Repository.Interface\Sonic.VM.Repository.Interface.csproj">
+      <Project>{1a3ee665-ff5b-47f9-91fc-1c8679f18364}</Project>
+      <Name>Sonic.VM.Repository.Interface</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sonic.VM.Service\Sonic.VM.Service.csproj">
       <Project>{a096d374-c09e-420a-971e-fbf0c0b890e2}</Project>
       <Name>Sonic.VM.Service</Name>
