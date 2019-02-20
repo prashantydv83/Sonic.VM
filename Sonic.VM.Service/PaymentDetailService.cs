@@ -15,11 +15,11 @@ namespace Sonic.VM.Service
     public class PaymentDetailService : IPaymentDetailService
     {
         private readonly ILogger _logger = Logger.MyLogger;
-        private readonly IPaymtDetailRepository paymtDtlRepository;
+        private readonly IPaymtDetailRepository _paymtDtlRepository;
 
-        public PaymentDetailService()
+        public PaymentDetailService(IPaymtDetailRepository paymtDtlRepository)
         {
-            paymtDtlRepository = new PaymtDtlDataRepository();
+            _paymtDtlRepository = paymtDtlRepository ?? new PaymtDtlDataRepository();
         }
 
         public bool AddPayment(PaymentDetail paymentDetail)
@@ -30,7 +30,7 @@ namespace Sonic.VM.Service
             {
                 if (paymentDetail == null)
                     throw new ArgumentException();
-                return paymtDtlRepository.AddPayment(paymentDetail);
+                return _paymtDtlRepository.AddPayment(paymentDetail);
             }
             catch (Exception ex)
             {
@@ -48,7 +48,7 @@ namespace Sonic.VM.Service
 
             try
             {
-                return paymtDtlRepository.GetPaymentTypes();
+                return _paymtDtlRepository.GetPaymentTypes();
             }
             catch (Exception ex)
             {
@@ -65,7 +65,7 @@ namespace Sonic.VM.Service
             var paymentDetails = new List<PaymentDetail>();
             try
             {
-                paymentDetails = paymtDtlRepository.GetPaymentDetails();
+                paymentDetails = _paymtDtlRepository.GetPaymentDetails();
                 return paymentDetails.Where(i => i.PaymtID == paymtId).Sum(a => a.Amnt);
             }
             catch (Exception ex)
@@ -82,7 +82,7 @@ namespace Sonic.VM.Service
 
             try
             {
-                paymtDtlRepository.RefreshPayments();
+                _paymtDtlRepository.RefreshPayments();
             }
             catch (Exception ex)
             {

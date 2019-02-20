@@ -6,12 +6,13 @@ using System.Collections.Generic;
 using Moq;
 using System;
 
-namespace Sonic.VM.Core.Tests
+namespace Sonic.VM.Core.Tests2
 {
     [TestClass]
     public class PaymentDetailServiceTests
     {
         IPaymtDetailRepository paymtDetailRepository;
+        PaymentDetailService paymentDetailService;
 
         [TestInitialize]
         public void Setup()
@@ -30,6 +31,7 @@ namespace Sonic.VM.Core.Tests
             
             _paymtrepoMock.Setup(r => r.RefreshPayments());             
             paymtDetailRepository = _paymtrepoMock.Object;
+            paymentDetailService = new PaymentDetailService(_paymtrepoMock.Object);
         }
 
         [TestMethod]
@@ -39,10 +41,10 @@ namespace Sonic.VM.Core.Tests
             PaymentDetail paymentDetail = new PaymentDetail { PaymtDtlId = 1, PaymtID = 1, Amnt = 2.5 };
 
             // Act
-            var obj = paymtDetailRepository.AddPayment(paymentDetail);
+            var result = paymentDetailService.AddPayment(paymentDetail);
 
             // Assert
-            Assert.IsNotNull(obj);
+            Assert.IsNotNull(result);
         }
 
         [TestMethod]
@@ -53,28 +55,28 @@ namespace Sonic.VM.Core.Tests
             PaymentDetail paymentDetail = new PaymentDetail ();
 
             // Act
-            var obj = paymtDetailRepository.AddPayment(paymentDetail);
+            var result = paymentDetailService.AddPayment(paymentDetail);
 
             // Assert
-            Assert.IsTrue(obj);
+            Assert.IsTrue(result);
         }
 
         [TestMethod]
         public void PaymentTypes_OnGetPaymentTypes_IsPopulated()
         {
             // Act
-            var obj = paymtDetailRepository.GetPaymentTypes();
+            var result = paymentDetailService.GetPaymentTypes();
 
             // Assert
-            Assert.IsNotNull(obj);
-            Assert.AreEqual(2, obj.Count);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(2, result.Count);
         }
 
         [TestMethod]
         public void OnRefreshPayments_Wokrs()
         {
             // Act
-           paymtDetailRepository.RefreshPayments();
+            paymentDetailService.RefreshPayments();
 
             // Assert
         }

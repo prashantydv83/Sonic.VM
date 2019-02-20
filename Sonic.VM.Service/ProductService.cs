@@ -15,11 +15,11 @@ namespace Sonic.VM.Service
     public class ProductService : IProductService
     {
         private readonly ILogger _logger = Logger.MyLogger;
-        private readonly IProductRepository productRepository;
+        private readonly IProductRepository _productRepository;
 
-        public ProductService()
+        public ProductService(IProductRepository productRepository)
         {
-            productRepository = new ProductDataRepository();
+            _productRepository = productRepository?? new ProductDataRepository();
         }
 
         public List<Product> GetProducts()
@@ -28,7 +28,7 @@ namespace Sonic.VM.Service
 
             try
             {
-                return productRepository.GetProducts();
+                return _productRepository.GetProducts();
             }
             catch (Exception ex)
             {
@@ -46,7 +46,7 @@ namespace Sonic.VM.Service
 
             try
             {
-                products = productRepository.GetProducts();
+                products = _productRepository.GetProducts();
                 var product = products.FirstOrDefault(i => i.ProdId == prodId);
                 if (product.ProdQty > 0)
                     return true;
@@ -68,10 +68,10 @@ namespace Sonic.VM.Service
             var products = new List<Product>();
             try
             {
-                products = productRepository.GetProducts();
+                products = _productRepository.GetProducts();
                 var prd = products.First(i => i.ProdId == productId);
                 prd.ProdQty = prd.ProdQty - 1;
-                return productRepository.UpdateProductStock(prd);
+                return _productRepository.UpdateProductStock(prd);
             }
             catch (Exception ex)
             {
@@ -87,7 +87,7 @@ namespace Sonic.VM.Service
 
             try
             {
-                return productRepository.AddNewProductStock(newstockproducts);
+                return _productRepository.AddNewProductStock(newstockproducts);
             }
             catch (Exception ex)
             {

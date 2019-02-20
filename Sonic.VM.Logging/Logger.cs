@@ -19,7 +19,7 @@ namespace Sonic.VM.Logging
         private Logger()
         {
             var filename = System.Configuration.ConfigurationManager.AppSettings["LoggerConfig"];
-            var logConfig = new FileInfo(filename);
+            var logConfig = new FileInfo(filename?? @"C:\\Projects\\Code\Sonic.VM\\Sonic.VM.Logging\\Logger.config");
             //var logConfig = new FileInfo(@"C:\\Projects\\Code\Sonic.VM\\Sonic.VM.Logging\\Logger.config");
             log4net.Config.XmlConfigurator.Configure(configFile: logConfig);
             log4NetLogger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

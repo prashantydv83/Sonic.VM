@@ -19,9 +19,9 @@ namespace Sonic.VM.Service
         private readonly IPaymentDetailService _paymentDetailService;
         private readonly ILogger _logger = Logger.MyLogger;
 
-        public OrderService(IProductService productService, IPaymentDetailService paymentDetailService)
+        public OrderService(IOrderRepository orderRepository, IProductService productService, IPaymentDetailService paymentDetailService)
         {
-            _orderRepository = new OrderDataRepository();
+            _orderRepository = orderRepository ?? new OrderDataRepository();
             _productService = productService;
             _paymentDetailService = paymentDetailService;
         }

@@ -5,17 +5,19 @@ using Sonic.VM.Service;
 using System.Collections.Generic;
 using Moq;
 
-namespace Sonic.VM.Core.Tests
+namespace Sonic.VM.Core.Tests2
 {
     [TestClass]
     public class ProductServiceTests
     {
         IProductRepository productRepository;
+        ProductService productService;
+        List<Product> products;
 
         [TestInitialize]
         public void Setup()
         {
-            List<Product> products = new List<Product> {
+            products = new List<Product> {
             new Product{ ProdId = 1, ProdName= "Mango", ProdPrice= 2.5,ProdQty = 3 },
             new Product{ ProdId = 2, ProdName= "Orange", ProdPrice= 2.5 ,ProdQty = 3},
             new Product{ ProdId = 3, ProdName= "PineApple", ProdPrice= 2.5,ProdQty = 3 }
@@ -25,31 +27,33 @@ namespace Sonic.VM.Core.Tests
 
             var _productrepoMock = new Mock<IProductRepository>();
             _productrepoMock.Setup(r => r.GetProducts())
-                .Returns(products);
+                .Returns(products);            
             _productrepoMock.Setup(r => r.UpdateProductStock(It.IsAny<Product>()))
                .Returns(true);
+            _productrepoMock.Setup(r => r.AddNewProductStock(It.IsAny<List<Product>>()))
+             .Returns(true);
             productRepository = _productrepoMock.Object;
+            productService = new ProductService(_productrepoMock.Object);
         }
 
         [TestMethod]
         public void Products_OnGetProducts_IsPopulated()
         {
             // Act
-            var obj = productRepository.GetProducts();
+            var result = productService.GetProducts();
 
             // Assert
-            Assert.IsNotNull(obj);
-            Assert.AreEqual(3, obj.Count);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(3, result.Count);
         }
 
         [TestMethod]
         public void IsValid_OnIsProductInStock_OfValidQty()
         {
             //Arrange
-            var obj = new ProductService();
             
             //Act
-            var result = obj.IsProductInStock(1);
+            var result = productService.IsProductInStock(3);
 
             //Assert
             Assert.IsTrue(result);
@@ -58,11 +62,8 @@ namespace Sonic.VM.Core.Tests
         [TestMethod]
         public void IsNotValid_OnIsProductInStock_OfInvalidProduct()
         {
-            //Arrange
-            var obj = new ProductService();
-
             //Act
-            var result = obj.IsProductInStock(11);
+            var result = productService.IsProductInStock(11);
 
             //Assert
             Assert.IsFalse(result);
@@ -72,10 +73,8 @@ namespace Sonic.VM.Core.Tests
         public void StockUpdated_OnUpdateProductStock()
         {
             //Arrange
-            var obj = new ProductService();
-            Product prd = new Product { ProdId = 2, ProdName = "Orange", ProdPrice = 2.5, ProdQty = 3 };
             // Act
-            var result = productRepository.UpdateProductStock(prd);
+            var result = productService.UpdateProductStock(2);
 
             // Assert
             Assert.IsTrue(result);
@@ -84,13 +83,11 @@ namespace Sonic.VM.Core.Tests
         [TestMethod]
         public void StockNotUpdated_OnUpdateProductStock_WhereNoStock()
         {
-            //
-            Product prd = new Product { ProdId = 2, ProdName = "Orange", ProdPrice = 2.5, ProdQty = 0 };
-            // Act
-            var obj = productRepository.UpdateProductStock(prd);
+           // Act
+            var obj = productService.UpdateProductStock(5);
 
             // Assert
-            Assert.IsTrue(obj);
+            Assert.IsFalse(obj);
         }
 
         [TestMethod]
@@ -98,12 +95,10 @@ namespace Sonic.VM.Core.Tests
         {
 
             // Act
-            //var obj = productRepository.AddNewProductStock(products);
+            var obj = productService.AddNewProductStock(products);
 
             //// Assert
-            //Assert.IsTrue(obj);
+            Assert.IsTrue(obj);
         }
-
-
     }
 }
